@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import title from '../assets/title.png'
 import TodoItems from "./TodoItems";
 
@@ -19,6 +19,26 @@ function Todo() {
       inputRef.current.value=" "
 
   }
+  function delete_todo(id){
+    setTodoList((prvTods)=>{
+      return prvTods.filter((todo)=>todo.id!==id)
+    })
+  }
+  function toggle(id){
+    setTodoList((prevTodos)=>{
+      return prevTodos.map((todo)=>{
+        if(todo.id==id){
+          return {...todo,isComplete:!todo.isComplete}
+        }
+        return todo
+      })
+    })
+  }
+  useEffect(()=>{
+    // console.log(todoList);
+    localStorage.setItem("todos", JSON.stringify(todoList))
+    
+  },[todoList])
   return (
     <div className="bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-[550px] rounded-2xl">
 
@@ -43,7 +63,7 @@ function Todo() {
       <div>
         {
           todoList.map((item,index)=>{
-            return <TodoItems key={index} text={item.text}/>
+            return <TodoItems key={index} text={item.text} id={item.id} isComplete={item.isComplete} delete_todo={delete_todo} toggle={toggle}/>
           })
         }
 
